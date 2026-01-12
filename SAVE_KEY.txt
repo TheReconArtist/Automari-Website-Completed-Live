@@ -1,0 +1,18 @@
+# INSTRUCTIONS TO SAVE YOUR KEY
+
+## STEP 1: Press Ctrl + C in Terminal
+(This cancels the broken command)
+
+## STEP 2: Copy this command and paste YOUR FULL KEY (no spaces!)
+Replace YOUR_ACTUAL_KEY_HERE with your complete key from OpenAI:
+
+echo 'OPENAI_API_KEY=YOUR_ACTUAL_KEY_HERE' > /Users/theoasis/automari-website/automari-website-1/.env.local
+
+## IMPORTANT WARNINGS:
+⚠️  Your API key should NOT have spaces in it
+⚠️  The key should be one continuous string starting with "sk-"
+⚠️  If you copied it and there are spaces, remove all spaces before pasting
+
+## Example of CORRECT format:
+sk-proj-oXhDptS_NteoVKrP_eWPycNPBi9QqM0vcb_5QeNBlyfwLs6GjXSb... (no spaces!)
+
