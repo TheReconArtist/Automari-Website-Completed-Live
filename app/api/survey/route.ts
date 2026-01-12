@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-// Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend lazily to avoid build-time errors
+let resend: Resend | null = null;
+function getResend(): Resend | null {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 // Destination email
 const TO_EMAIL = 'contactautomari@gmail.com';
@@ -229,7 +235,11 @@ export async function POST(req: NextRequest) {
     const subject = `New Business Assessment — ${companyName} — ${date}`;
 
     // Send email via Resend
-    const { data: emailResult, error: emailError } = await resend.emails.send({
+    const resendClient = getResend();
+    if (!resendClient) {
+      throw new Error('Resend client not initialized');
+    }
+    const { data: emailResult, error: emailError } = await resendClient.emails.send({
       from: 'Automari Assessments <assessments@resend.dev>', // Use resend.dev for testing, or your verified domain
       to: TO_EMAIL,
       subject,
