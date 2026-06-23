@@ -348,7 +348,7 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative hidden min-h-[560px] lg:block pointer-events-auto"
+            className="relative hidden min-h-[640px] lg:block pointer-events-auto"
           >
             <div className="absolute left-10 top-2 max-w-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-cyan-200/70">
@@ -360,6 +360,52 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
             </div>
 
             <div className="absolute inset-0 [perspective:1200px]">
+              <svg
+                className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible opacity-70"
+                viewBox="0 0 560 640"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M170 190 C 250 220, 295 230, 390 258"
+                  stroke="url(#savingsConnectorGradient)"
+                  strokeWidth="1.5"
+                  strokeDasharray="7 9"
+                  className="drop-shadow-[0_0_10px_rgba(34,211,238,0.55)]"
+                />
+                <path
+                  d="M395 315 C 320 350, 255 365, 190 386"
+                  stroke="url(#savingsConnectorGradient)"
+                  strokeWidth="1.5"
+                  strokeDasharray="7 9"
+                  className="drop-shadow-[0_0_10px_rgba(34,211,238,0.55)]"
+                />
+                <path
+                  d="M195 440 C 280 462, 325 485, 405 516"
+                  stroke="url(#savingsConnectorGradient)"
+                  strokeWidth="1.5"
+                  strokeDasharray="7 9"
+                  className="drop-shadow-[0_0_10px_rgba(34,211,238,0.55)]"
+                />
+                {[170, 390, 190, 405].map((x, i) => (
+                  <circle
+                    key={i}
+                    cx={x}
+                    cy={[190, 258, 386, 516][i]}
+                    r="4"
+                    fill="rgb(103 232 249)"
+                    className="drop-shadow-[0_0_12px_rgba(103,232,249,0.9)]"
+                  />
+                ))}
+                <defs>
+                  <linearGradient id="savingsConnectorGradient" x1="120" y1="180" x2="450" y2="520" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#22d3ee" stopOpacity="0" />
+                    <stop offset="0.48" stopColor="#67e8f9" stopOpacity="0.75" />
+                    <stop offset="1" stopColor="#a78bfa" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
               {[
                 {
                   icon: TrendingUp,
@@ -373,21 +419,21 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
                   value: '20-50',
                   label: 'Hours saved weekly',
                   color: 'text-emerald-300',
-                  className: 'right-8 top-40 z-30 rotate-2 -skew-y-[4deg]',
+                  className: 'right-2 top-[13.5rem] z-30 rotate-2 -skew-y-[4deg]',
                 },
                 {
                   icon: Shield,
                   value: '99%',
                   label: 'Client satisfaction',
                   color: 'text-amber-300',
-                  className: 'left-10 top-64 z-20 rotate-2 -skew-y-[4deg]',
+                  className: 'left-10 top-[21rem] z-20 rotate-2 -skew-y-[4deg]',
                 },
                 {
                   icon: Sparkles,
                   value: '24/7',
                   label: 'Always available',
                   color: 'text-purple-300',
-                  className: 'right-14 top-[21rem] z-10 -rotate-2 -skew-y-[4deg]',
+                  className: 'right-10 top-[28.5rem] z-10 -rotate-2 -skew-y-[4deg]',
                 },
               ].map((item, i) => (
                 <motion.div
@@ -397,7 +443,7 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
                   transition={{ delay: 0.65 + i * 0.12, duration: 0.7 }}
                   whileHover={{ y: -12, scale: 1.03, rotate: 0, skewY: 0 }}
                   className={cn(
-                    'absolute flex h-[7.5rem] w-[17rem] select-none flex-col justify-between rounded-2xl border border-cyan-200/18 bg-slate-950/42 px-5 py-4 shadow-[0_18px_55px_rgba(8,47,73,0.28),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md transition-all duration-500 hover:border-cyan-200/35 hover:bg-slate-950/58 hover:shadow-[0_22px_70px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]',
+                    'absolute flex h-[7rem] w-[15.75rem] select-none flex-col justify-between rounded-2xl border border-cyan-200/18 bg-slate-950/40 px-5 py-4 shadow-[0_18px_55px_rgba(8,47,73,0.24),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md transition-all duration-500 hover:border-cyan-200/35 hover:bg-slate-950/55 hover:shadow-[0_22px_70px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]',
                     'before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/[0.09] before:via-transparent before:to-cyan-300/[0.06] before:content-[""]',
                     item.className,
                   )}

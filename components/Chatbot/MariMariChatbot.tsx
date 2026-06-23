@@ -177,11 +177,32 @@ function MariMariChatbotUI() {
     <>
       {/* Floating Chat Button */}
       <motion.div
-        className="fixed bottom-6 right-6 z-[60]"
+        className="fixed bottom-6 right-6 z-[60] w-14"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
       >
+        <AnimatePresence>
+          {!isOpen && (
+            <motion.div
+              className="pointer-events-none absolute bottom-[4.5rem] left-0 right-0 hidden text-center sm:block"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.35, delay: 0.4 }}
+            >
+              <div className="relative inline-block leading-[1.15]">
+                <span className="absolute inset-0 whitespace-pre bg-gradient-to-r from-cyan-300 via-fuchsia-400 to-orange-300 bg-clip-text text-xs font-semibold leading-[1.15] tracking-[-0.01em] text-transparent blur-sm brightness-125">
+                  {`Chat with\nMari-Mari`}
+                </span>
+                <span className="relative whitespace-pre bg-gradient-to-r from-cyan-200 via-fuchsia-300 to-orange-200 bg-[length:200%_200%] bg-clip-text text-xs font-semibold leading-[1.15] tracking-[-0.01em] text-transparent drop-shadow-[0_0_10px_rgba(34,211,238,0.85)] animate-pulse">
+                  {`Chat with\nMari-Mari`}
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Minimize chat" : "Open chat with Mari"}
