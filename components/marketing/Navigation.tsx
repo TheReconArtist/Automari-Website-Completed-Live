@@ -36,7 +36,7 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
     <>
       {/* Top Contact Bar - Hidden on scroll for cleaner look */}
       <motion.div
-        className="fixed top-0 left-0 right-0 z-[60] bg-slate-950/95 border-b border-slate-800/50"
+        className="fixed top-0 left-0 right-0 z-[60] bg-white/[0.035] border-b border-cyan-300/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-2xl"
         initial={{ y: 0 }}
         animate={{ y: isScrolled ? -40 : 0 }}
         transition={{ duration: 0.3 }}
@@ -75,8 +75,8 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
       <motion.nav
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'top-0 bg-slate-950/98 backdrop-blur-xl border-b border-cyan-500/10 shadow-lg shadow-cyan-500/5'
-            : 'top-10 bg-slate-950/80 backdrop-blur-md'
+            ? 'top-0 bg-white/[0.055] backdrop-blur-2xl border-b border-cyan-300/14 shadow-[0_16px_54px_rgba(8,47,73,0.18),inset_0_1px_0_rgba(255,255,255,0.10)]'
+            : 'top-10 bg-white/[0.04] backdrop-blur-2xl border-b border-cyan-300/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -95,12 +95,13 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
                 {/* Glow effect */}
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500/40 to-blue-600/40 blur-lg opacity-60 group-hover:opacity-100 transition-opacity" />
                 {/* Logo container */}
-                <div className="relative w-full h-full rounded-xl bg-slate-900/90 border border-cyan-500/30 group-hover:border-cyan-400/50 transition-colors overflow-hidden p-1.5">
+                <div className="relative w-full h-full rounded-xl bg-white/[0.06] border border-cyan-300/22 group-hover:border-cyan-300/45 transition-colors overflow-hidden p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-xl">
                   <Image
-                    src="/automari-logo.png"
+                    src="/automari-icon-transparent.png"
                     alt="Automari"
-                    fill
-                    className="object-contain"
+                    width={36}
+                    height={36}
+                    className="h-full w-full max-h-9 max-w-9 object-contain"
                     priority
                   />
                 </div>
@@ -128,7 +129,7 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-all"
+                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-white/[0.07] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] transition-all"
                   whileHover={{ y: -1 }}
                 >
                   {link.label}
@@ -141,7 +142,7 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
               {/* Secondary CTA */}
               <Button
                 variant="ghost"
-                className="text-slate-300 hover:text-white hover:bg-white/5 font-medium"
+                className="text-slate-300 hover:text-white hover:bg-white/[0.07] font-medium"
                 asChild
               >
                 <a href="/pricing">View Pricing</a>
@@ -151,7 +152,7 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Button
                   onClick={onStartAssessment}
-                  className="relative px-6 py-2.5 font-semibold text-white overflow-hidden group"
+                  className="relative px-6 py-2.5 font-semibold text-white overflow-hidden group border border-cyan-100/20 shadow-[0_10px_30px_rgba(6,182,212,0.24),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-xl"
                   style={{
                     background: 'linear-gradient(135deg, #0891b2 0%, #3b82f6 100%)',
                     boxShadow: '0 4px 20px rgba(6, 182, 212, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
@@ -172,15 +173,16 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
               <Button
                 onClick={onStartAssessment}
                 size="sm"
-                className="text-xs px-3 font-semibold"
+                className="group relative overflow-hidden rounded-xl border border-cyan-100/25 px-4 py-2 text-xs font-bold text-white shadow-[0_12px_34px_rgba(6,182,212,0.30),inset_0_1px_0_rgba(255,255,255,0.22)]"
                 style={{
-                  background: 'linear-gradient(135deg, #0891b2 0%, #3b82f6 100%)',
+                  background: 'linear-gradient(135deg, #06b6d4 0%, #2563eb 100%)',
                 }}
               >
-                Book Call
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full transition-transform duration-700 group-hover:translate-x-full" />
+                <span className="relative">Book Call</span>
               </Button>
               <motion.button
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                className="p-2 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] border border-cyan-300/12 shadow-[inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl transition-colors"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 whileTap={{ scale: 0.95 }}
               >
@@ -198,18 +200,19 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
-              className="lg:hidden absolute top-full left-0 right-0 bg-slate-950/98 backdrop-blur-xl border-b border-slate-800/50"
+              className="lg:hidden absolute top-full left-0 right-0 border-b border-cyan-300/20 bg-slate-950/95 shadow-[0_24px_80px_rgba(2,6,23,0.72),inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-2xl"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="max-w-7xl mx-auto px-4 py-6 space-y-1">
+              <div className="relative max-w-7xl mx-auto px-4 py-6 space-y-1">
+                <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/45 to-transparent" />
                 {navLinks.map((link, index) => (
                   <motion.a
                     key={link.label}
                     href={link.href}
-                    className="block px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                    className="block rounded-xl border border-transparent px-4 py-3 text-base font-semibold text-slate-100 hover:border-cyan-300/20 hover:bg-white/[0.07] hover:text-white transition-colors"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
@@ -219,17 +222,17 @@ export function Navigation({ onStartAssessment }: NavigationProps) {
                   </motion.a>
                 ))}
 
-                <div className="pt-4 mt-4 border-t border-slate-800/50 space-y-3">
+                <div className="pt-4 mt-4 border-t border-cyan-300/10 space-y-3">
                   <a
                     href="tel:561-201-4365"
-                    className="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-colors"
+                    className="flex items-center gap-3 px-4 py-2 text-slate-200 hover:text-white transition-colors"
                   >
                     <Phone className="h-4 w-4 text-cyan-400" />
                     <span>561-201-4365</span>
                   </a>
                   <a
                     href="mailto:contactautomari@gmail.com"
-                    className="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-white transition-colors"
+                    className="flex items-center gap-3 px-4 py-2 text-slate-200 hover:text-white transition-colors"
                   >
                     <Mail className="h-4 w-4 text-cyan-400" />
                     <span>contactautomari@gmail.com</span>

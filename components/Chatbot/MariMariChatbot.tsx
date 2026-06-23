@@ -2,13 +2,19 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Bot, X, Minimize2, Send, Sparkles, Phone, Mail, Zap, Brain, MessageSquare } from "lucide-react"
-import Image from "next/image"
+import { ChevronDown, Send, Zap, Brain, MessageSquare } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
 import { BrainProvider, useChat, ChatMessage } from '@/components/chat/BrainProvider';
 import { toast } from 'sonner';
 import { useChatOpen } from '@/components/chat/useChatOpen';
+import { SiriWaveLogo } from './SiriWaveLogo';
+import {
+  MAIN_CATEGORIES,
+  getFollowUpOptions,
+  shouldShowMainCategories,
+  GuidedOption,
+} from '@/lib/ai/guidedFlows';
 
 // Define a type for lead capture information
 interface LeadInfo {
@@ -35,6 +41,25 @@ function MariMariChatbotUI() {
     scrollToBottom()
   }, [messages, isLoading])
 
+  const submitLead = async (info: LeadInfo) => {
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: info.name,
+          email: info.email,
+          phone: info.phone,
+          message: 'Lead captured via Mari Mari chatbot — requested discovery call/quote.',
+          source: 'Mari Mari Chatbot',
+          type: 'chatbot-lead',
+        }),
+      });
+    } catch {
+      // Non-blocking
+    }
+  };
+
   const handleSendMessage = async (initialMessage?: string) => {
     const currentInput = initialMessage || inputMessage.trim();
     if (!currentInput || isLoading) return;
@@ -44,29 +69,43 @@ function MariMariChatbotUI() {
 
     if (awaitingLeadInfo) {
       const parsedLeadInfo = parseLeadInfo(currentInput);
-      setLeadInfo(prev => ({ ...prev, ...parsedLeadInfo }));
+      const mergedLead = { ...leadInfo, ...parsedLeadInfo };
+      setLeadInfo(mergedLead);
 
-      if (parsedLeadInfo.name && parsedLeadInfo.email && parsedLeadInfo.phone) {
-        console.log("Lead Captured:", { name: parsedLeadInfo.name, email: parsedLeadInfo.email, phone: parsedLeadInfo.phone });
-        toast.success(`Thank you, ${parsedLeadInfo.name}! Our team will reach out to you shortly.`, { duration: 5000 });
+      addMessage({ id: Date.now(), sender: "You", text: currentInput, timestamp: new Date() });
+
+      const missing: string[] = [];
+      if (!mergedLead.name) missing.push('name');
+      if (!mergedLead.email) missing.push('email');
+      if (!mergedLead.phone) missing.push('phone number');
+
+      if (missing.length === 0) {
+        await submitLead(mergedLead);
+        toast.success(`Thank you, ${mergedLead.name}! Our team will reach out shortly.`, { duration: 5000 });
         addMessage({
-          id: Date.now(),
+          id: Date.now() + 1,
           sender: "AI",
-          text: `Excellent! Thank you, ${parsedLeadInfo.name}. Our team will personally review your details and contact you very soon to discuss your automation strategy. In the meantime, feel free to explore our services further or ask more questions.`, 
+          text: `Perfect, ${mergedLead.name}! Mike will reach out at ${mergedLead.email} or ${mergedLead.phone} within a few hours to schedule your discovery call. Feel free to keep asking me about automation in the meantime.`,
           timestamp: new Date()
         });
         setAwaitingLeadInfo(false);
+        setLeadInfo({});
       } else {
         addMessage({
-          id: Date.now(),
+          id: Date.now() + 1,
           sender: "AI",
-          text: `I still need your ${!leadInfo.name ? 'name' : ''} ${!leadInfo.email ? 'email' : ''} ${!leadInfo.phone ? 'phone number' : ''}. Please provide the missing details.`, 
+          text: `Almost there — I still need your ${missing.join(', ')}. Drop them in one message (e.g. "John Smith, john@company.com, 561-555-1234").`,
           timestamp: new Date()
         });
       }
-      await sendMessage(currentInput);
     } else {
       await sendMessage(currentInput);
+
+      const lower = currentInput.toLowerCase();
+      if (lower.includes('book') || lower.includes('schedule') || lower.includes('discovery') ||
+          lower.includes('quote') || lower.includes('consultation') || lower.includes('appointment')) {
+        setAwaitingLeadInfo(true);
+      }
     }
     
     setTimeout(() => setIsTyping(false), 500);
@@ -79,32 +118,34 @@ function MariMariChatbotUI() {
     }
   };
 
-  const quickActions = [
-    { text: "Get a Quote", query: "I need a quote for AI automation.", icon: Sparkles },
-    { text: "Book a Discovery Call", query: "How can I book a discovery call?", icon: Phone },
-    { text: "What can Automari automate?", query: "What specific business processes can Automari automate?", icon: Brain },
-  ];
+  const chatMessages = messages.map(m => ({ sender: m.sender, text: m.text }));
+  const lastUserMsg = [...messages].reverse().find(m => m.sender === 'You')?.text || '';
+  const lastAiMsg = [...messages].reverse().find(m => m.sender === 'AI')?.text || '';
+  const followUpOptions = !isLoading ? getFollowUpOptions(lastUserMsg, lastAiMsg) : null;
+  const showMainCategories = !isLoading && !awaitingLeadInfo && shouldShowMainCategories(chatMessages);
 
-  const handleQuickAction = async (query: string) => {
+  const handleOptionSelect = async (option: GuidedOption) => {
     if (isLoading) return;
-    await handleSendMessage(query);
-    if (query.toLowerCase().includes("book") || query.toLowerCase().includes("quote")) {
-        setAwaitingLeadInfo(true);
-        addMessage({
-          id: Date.now(),
-          sender: "AI",
-          text: `Excellent! To help our team prepare for your personalized discussion, could you please provide your **Name**, **Email**, and **Phone Number**?`, 
-          timestamp: new Date()
-        });
+    await handleSendMessage(option.query);
+    const lower = option.query.toLowerCase();
+    if (lower.includes('book') || lower.includes('discovery') || lower.includes('quote')) {
+      setAwaitingLeadInfo(true);
     }
   };
 
   const parseLeadInfo = (text: string): LeadInfo => {
-    const nameMatch = text.match(/(?:my name is|i am|name:)\s+([a-zA-Z]+\s+[a-zA-Z]+)/i);
     const emailMatch = text.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
     const phoneMatch = text.match(/((?:\+\d{1,3}[-.\s]?)?(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4})/);
+    const nameExplicit = text.match(/(?:my name is|i am|i'm|name:)\s+([a-zA-Z]+(?:\s+[a-zA-Z]+)?)/i);
+    let name = nameExplicit ? nameExplicit[1] : undefined;
+    if (!name) {
+      const withoutContact = text.replace(emailMatch?.[0] || '', '').replace(phoneMatch?.[0] || '', '').replace(/[,;|]/g, ' ').trim();
+      const words = withoutContact.split(/\s+/).filter(w => /^[A-Z][a-z]+$/.test(w));
+      if (words.length >= 2) name = `${words[0]} ${words[1]}`;
+      else if (words.length === 1) name = words[0];
+    }
     return {
-      name: nameMatch ? nameMatch[1] : undefined,
+      name,
       email: emailMatch ? emailMatch[1] : undefined,
       phone: phoneMatch ? phoneMatch[1] : undefined,
     };
@@ -134,107 +175,47 @@ function MariMariChatbotUI() {
 
   return (
     <>
-      {/* Futuristic Floating Chat Button */}
+      {/* Floating Chat Button */}
       <motion.div
         className="fixed bottom-6 right-6 z-[60]"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ delay: 2, type: "spring", stiffness: 200 }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 1.5, type: "spring", stiffness: 200 }}
       >
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative w-20 h-20 bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 rounded-full shadow-2xl flex items-center justify-center text-white group overflow-hidden"
+          aria-label={isOpen ? "Minimize chat" : "Open chat with Mari"}
+          className="relative w-14 h-14 rounded-full flex items-center justify-center overflow-hidden shadow-xl"
           style={{
-            boxShadow: '0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3)',
+            background: 'linear-gradient(135deg, #0b1220 0%, #020617 100%)',
+            boxShadow: '0 4px 24px rgba(34, 211, 238, 0.5)',
           }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          animate={{
-            boxShadow: [
-              '0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3)',
-              '0 0 60px rgba(59, 130, 246, 0.8), 0 0 100px rgba(59, 130, 246, 0.5)',
-              '0 0 40px rgba(59, 130, 246, 0.6), 0 0 80px rgba(59, 130, 246, 0.3)',
-            ],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          {/* Animated background gradient */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-blue-400 via-cyan-400 to-blue-500"
-            animate={{
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-          
           <AnimatePresence mode="wait">
             {isOpen ? (
               <motion.div
-                key="close"
-                initial={{ rotate: -180, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 180, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="relative z-10"
+                key="minimize"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.15 }}
               >
-                <X className="h-6 w-6" />
+                <ChevronDown className="h-5 w-5 text-cyan-400" strokeWidth={2.5} />
               </motion.div>
             ) : (
               <motion.div
-                key="logo"
-                initial={{ rotate: 180, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -180, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="relative z-10 w-full h-full flex items-center justify-center p-2"
+                key="open"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.15 }}
               >
-                <Image
-                  src="/automari-logo.png"
-                  alt="Automari Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                />
+                <SiriWaveLogo size={56} aria-label="Chat with Automari" />
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Pulsing ring effect */}
-          <motion.div
-            className="absolute inset-0 rounded-full border-2 border-blue-400/50"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.5, 0, 0.5],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeOut",
-            }}
-          />
-
-          {/* AI Badge */}
-          <motion.div
-            className="absolute -top-1 -right-1 w-7 h-7 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-xs font-bold text-white border-2 border-slate-900 shadow-lg"
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            AI
-          </motion.div>
         </motion.button>
       </motion.div>
 
@@ -454,62 +435,24 @@ function MariMariChatbotUI() {
             {/* Futuristic Header */}
             <div className="relative z-10 bg-gradient-to-r from-blue-600/20 via-cyan-500/10 to-blue-600/20 backdrop-blur-md p-5 border-b border-blue-500/30">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <motion.div
-                    className="relative w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden bg-slate-900/50"
-                    animate={{
-                      rotate: [0, 2, -2, 0],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Image
-                      src="/automari-logo.png"
-                      alt="Automari Logo"
-                      fill
-                      className="object-contain p-1.5"
-                      priority
-                    />
-                    <motion.div
-                      className="absolute inset-0 rounded-xl bg-blue-400/30 blur-md"
-                      animate={{
-                        opacity: [0.3, 0.6, 0.3],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </motion.div>
-                  <div>
-                    <h3 className="font-bold text-white text-lg flex items-center gap-2">
+                <div className="flex items-center space-x-3 min-w-0">
+                  <SiriWaveLogo size={40} aria-label="Automari.Ai" />
+                  <div className="min-w-0 border-l border-blue-500/20 pl-3">
+                    <h3 className="font-bold text-white text-sm flex items-center gap-2 truncate">
                       Mari Mari
-                      <motion.span
-                        className="w-2 h-2 bg-green-400 rounded-full"
-                        animate={{
-                          opacity: [1, 0.3, 1],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      />
+                      <span className="w-2 h-2 bg-green-400 rounded-full shrink-0" />
                     </h3>
-                    <p className="text-xs text-blue-300 font-medium">AI-Automation Strategist</p>
+                    <p className="text-xs text-blue-300/80 font-medium truncate">AI-Automation Strategist</p>
                   </div>
                 </div>
                 <motion.button
                   onClick={() => setIsOpen(false)}
-                  className="text-slate-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-blue-500/20"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
+                  aria-label="Minimize chat"
+                  className="shrink-0 text-slate-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 border border-transparent hover:border-white/10"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Minimize2 className="h-5 w-5" />
+                  <ChevronDown className="h-5 w-5" />
                 </motion.button>
               </div>
             </div>
@@ -551,35 +494,34 @@ function MariMariChatbotUI() {
                 </motion.div>
               ))}
 
-              {/* Quick Actions */}
-              {messages.length === 1 && !isLoading && !awaitingLeadInfo && (
+              {/* Guided option chips */}
+              {(showMainCategories || followUpOptions) && !isLoading && !awaitingLeadInfo && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="grid grid-cols-1 gap-3 mt-4"
+                  className="mt-3 space-y-2"
                 >
-                  <div className="text-xs text-blue-300 font-semibold mb-2 flex items-center gap-2">
+                  <div className="text-xs text-blue-300/80 font-medium flex items-center gap-1.5 px-1">
                     <Zap className="h-3 w-3" />
-                    Quick Start Topics:
+                    {showMainCategories ? 'Pick an area to get started:' : 'What fits best?'}
                   </div>
-                  {quickActions.map((action, index) => {
-                    const IconComponent = action.icon;
-                    return (
+                  <div className="flex flex-col gap-2">
+                    {(showMainCategories ? MAIN_CATEGORIES : followUpOptions!)!.map((option, index) => (
                       <motion.button
-                        key={index}
-                        onClick={() => handleQuickAction(action.query)}
+                        key={option.label}
+                        onClick={() => handleOptionSelect(option)}
                         disabled={isLoading}
-                        className="text-sm p-3 bg-slate-800/60 hover:bg-blue-600/20 rounded-xl text-blue-300 hover:text-white transition-all text-left border border-blue-500/30 hover:border-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm group"
-                        whileHover={{ scale: 1.02, x: 5 }}
+                        className="text-sm px-4 py-2.5 bg-slate-800/70 hover:bg-blue-600/25 rounded-xl text-slate-200 hover:text-white transition-all text-left border border-blue-500/25 hover:border-cyan-400/40 disabled:opacity-50 backdrop-blur-sm"
+                        whileHover={{ scale: 1.01, x: 3 }}
                         whileTap={{ scale: 0.98 }}
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0, x: -12 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        transition={{ delay: index * 0.05 }}
                       >
-                        <IconComponent className="inline-block h-4 w-4 mr-2 text-cyan-400 group-hover:text-cyan-300" /> {action.text}
+                        {option.label}
                       </motion.button>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </motion.div>
               )}
 
@@ -669,7 +611,7 @@ function MariMariChatbotUI() {
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder={awaitingLeadInfo ? "Your Name, Email, and Phone..." : "Describe your biggest business bottleneck..."}
+                    placeholder={awaitingLeadInfo ? "Name, email, phone (e.g. John Smith, john@co.com, 561-555-1234)" : "Describe your biggest business bottleneck..."}
                     className="w-full bg-slate-800/60 border-2 border-blue-500/30 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-lg backdrop-blur-sm"
                     disabled={isLoading}
                   />

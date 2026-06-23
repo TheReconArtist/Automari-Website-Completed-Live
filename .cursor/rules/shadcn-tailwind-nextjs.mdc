@@ -1,0 +1,29 @@
+---
+description: Use the existing shadcn/ui and Tailwind setup correctly in this Next.js project
+alwaysApply: true
+---
+
+# shadcn/ui + Tailwind Project Rules
+
+This project is **Next.js 14 App Router**, not Vite.
+
+## Use the existing stack
+
+- Package manager: `npm`.
+- Tailwind is already configured through `tailwind.config.ts`, `postcss.config.mjs`, and `app/globals.css`.
+- shadcn/ui is already configured through `components.json` and `components/ui/*`.
+- Prefer existing `components/ui/*` primitives before adding new UI dependencies.
+- Use `framer-motion` only for meaningful interaction, reveal, or premium polish.
+
+## Do not do this
+
+- Do not install Vite or `@tailwindcss/vite`.
+- Do not replace the Next.js Tailwind setup with Vite setup instructions.
+- Do not add Magic UI or Aceternity-style packages unless the existing Tailwind/shadcn stack cannot accomplish the section.
+- Do not introduce new styling systems for one-off sections.
+
+## Homepage UI workflow
+
+- Build premium sections with Tailwind utilities, shadcn-style primitives, and existing motion patterns.
+- Keep mobile responsive layouts first.
+- After homepage UI edits, run `npm run build` and verify `/` returns HTTP 200.

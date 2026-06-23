@@ -1,0 +1,33 @@
+---
+description: Prevent scope creep — one user request = one minimal diff
+alwaysApply: true
+---
+
+# Single-Change Scope — Automari Website
+
+## When the user asks for a text/copy change
+
+- Change **only the exact string** they named. Do not refactor surrounding layout, typography, images, or sections.
+- Do **not** touch `HeroSection.tsx`, `app/page.tsx`, `Navigation.tsx`, or `app/layout.tsx` unless the user names that file in the **current** message.
+- If the string lives in one file (e.g. `AgentsSection.tsx`), edit **that file only**.
+
+## When the user says "simple change"
+
+Treat it as a **single-line or single-string edit**. Forbidden without explicit approval:
+- Hero/layout rewrites
+- New images or logo swaps
+- Font size bumps (`text-7xl`, `text-8xl`, etc.)
+- Removing or adding homepage sections
+- "While I'm here" premium upgrades
+
+## Before editing marketing UI
+
+1. `git diff --stat` — if more than 1–2 files would change for a copy request, stop and narrow scope.
+2. Never use `next/image` with `fill` unless the parent has explicit `w-*` + `h-*` bounds.
+3. After any marketing edit: `npm run build` and confirm nav logo stays ~44px (icon + text), not a full-width banner.
+
+## If the site already looks broken
+
+1. `git restore` affected homepage files to last committed state first.
+2. Re-apply **only** the user's requested change.
+3. Do not stack new fixes on top of broken layout.

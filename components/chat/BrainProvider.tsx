@@ -45,7 +45,7 @@ export function BrainProvider({ children, systemPromptOverride }: BrainProviderP
     {
       id: 'initial',
       sender: "AI",
-      text: "Hey! I'm Mari, your AI-automation strategist. Tell me the one part of your business that feels the most chaotic or time-consuming right now.",
+      text: "Hey! I'm Mari, your AI automation strategist. Pick an area below and I'll show you exactly how automation can help — or just tell me what's going on.",
       timestamp: new Date(),
     },
   ]);
@@ -66,7 +66,7 @@ export function BrainProvider({ children, systemPromptOverride }: BrainProviderP
       {
         id: 'initial',
         sender: "AI",
-        text: "Hey! I'm Mari, your AI-automation strategist. Tell me the one part of your business that feels the most chaotic or time-consuming right now.",
+        text: "Hey! I'm Mari, your AI automation strategist. Pick an area below and I'll show you exactly how automation can help — or just tell me what's going on.",
         timestamp: new Date(),
       },
     ]);
@@ -240,7 +240,8 @@ The user said: "${lastUserMessage}"
               'x-session-id': sessionId.current // Pass session ID for conversation memory
             },
             body: JSON.stringify({ 
-              messages: apiMessages
+              messages: apiMessages,
+              hasInitialGreeting: currentMessages.some(m => m.id === 'initial'),
             }),
             signal, // Pass the abort signal
           });
@@ -418,7 +419,8 @@ The user said: "${lastUserMessage}"
           if (process.env.NODE_ENV === 'development') {
             console.warn("[BrainProvider] Falling back to rules-based response (API unavailable)");
           }
-          const isFirstUserMessage = currentMessages.filter(m => m.sender === "You").length === 1;
+          const isFirstUserMessage = !currentMessages.some(m => m.id === 'initial') &&
+            currentMessages.filter(m => m.sender === "You").length === 1;
           const rulesResponse = await getRulesFallbackResponse(text, isFirstUserMessage);
           aiResponseText = rulesResponse.text;
           addMessage({ id: Date.now(), sender: "AI", text: aiResponseText, timestamp: new Date() });
@@ -431,7 +433,8 @@ The user said: "${lastUserMessage}"
           category: 'general'
         });
         
-        const isFirstUserMessage = currentMessages.filter(m => m.sender === "You").length === 1;
+        const isFirstUserMessage = !currentMessages.some(m => m.id === 'initial') &&
+          currentMessages.filter(m => m.sender === "You").length === 1;
         
         if (ragResponse.confidence > 0.5) {
           aiResponseText = ragResponse.answer;
@@ -458,7 +461,8 @@ The user said: "${lastUserMessage}"
             if (process.env.NODE_ENV === 'development') {
               console.log("Attempting rules-based fallback...");
             }
-            const isFirstUserMessage = currentMessages.filter(m => m.sender === "You").length === 1;
+            const isFirstUserMessage = !currentMessages.some(m => m.id === 'initial') &&
+              currentMessages.filter(m => m.sender === "You").length === 1;
             const rulesResponse = await getRulesFallbackResponse(text, isFirstUserMessage);
             aiResponseText = rulesResponse.text;
             addMessage({ id: Date.now() + 1, sender: "AI", text: aiResponseText, timestamp: new Date() });

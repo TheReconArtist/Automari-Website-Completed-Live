@@ -13,6 +13,13 @@ import {
   TrendingUp,
   BarChart3,
   Share2,
+  Building2,
+  MapPinned,
+  Wrench,
+  PhoneCall,
+  Scale,
+  FileSearch,
+  HeartPulse,
   LucideIcon,
   ArrowRight,
   ChevronDown,
@@ -185,6 +192,118 @@ const agents: Agent[] = [
       'Competitor brands outpacing you',
     ],
   },
+  {
+    id: 10,
+    title: 'Real Estate Off-Market Deal Finder',
+    icon: MapPinned,
+    description: 'Find, score, and nurture seller opportunities before they hit the market.',
+    benefit: 'Earlier deal flow',
+    gradient: 'from-cyan-500/10 to-sky-500/10',
+    iconBg: 'bg-gradient-to-br from-cyan-500 to-sky-600',
+    painPoints: [
+      'Public records, probate, absentee owner, expired listing, and FSBO data sitting unused',
+      'No scoring system for seller motivation, equity, timing, or property fit',
+      'Manual outreach slowing down investor and agent teams',
+      'Hot off-market conversations getting lost across calls, SMS, forms, and CRMs',
+      'Follow-up stops before owners are ready to sell',
+    ],
+  },
+  {
+    id: 11,
+    title: 'Real Estate Showing & Transaction Concierge',
+    icon: Building2,
+    description: 'Qualify buyers, book showings, follow up after tours, and chase transaction deadlines.',
+    benefit: 'More showings booked',
+    gradient: 'from-blue-500/10 to-cyan-500/10',
+    iconBg: 'bg-gradient-to-br from-blue-500 to-cyan-600',
+    painPoints: [
+      'Buyer leads need budget, location, timeline, financing, and intent sorted immediately',
+      'Showing requests arrive after hours and lose momentum by morning',
+      'Agents forget post-showing follow-up when the day gets busy',
+      'Inspection, disclosure, appraisal, and document reminders require constant chasing',
+      'Clients expect fast answers without sacrificing licensed human oversight',
+    ],
+  },
+  {
+    id: 12,
+    title: 'HVAC Emergency Dispatch Agent',
+    icon: PhoneCall,
+    description: 'Answer calls 24/7, triage urgency, route jobs, and protect the schedule during peak demand.',
+    benefit: 'Faster job booking',
+    gradient: 'from-orange-500/10 to-amber-500/10',
+    iconBg: 'bg-gradient-to-br from-orange-500 to-amber-600',
+    painPoints: [
+      'No-cool and no-heat calls need emergency triage, not generic chatbot replies',
+      'Dispatchers manually match jobs by location, technician skill, and availability',
+      'After-hours calls are expensive to miss and hard to recover',
+      'ServiceTitan, Housecall Pro, FieldEdge, or CRM notes are not always updated cleanly',
+      'Maintenance-plan customers need priority routing without disrupting the whole board',
+    ],
+  },
+  {
+    id: 13,
+    title: 'HVAC Quote & Maintenance Plan Agent',
+    icon: Wrench,
+    description: 'Turn photos, symptoms, invoices, and service history into faster estimates and rebooking loops.',
+    benefit: 'Higher repeat revenue',
+    gradient: 'from-amber-500/10 to-yellow-500/10',
+    iconBg: 'bg-gradient-to-br from-amber-500 to-yellow-600',
+    painPoints: [
+      'Manual quote prep slows replacements, repairs, ductwork, and tune-up offers',
+      'Technicians forget to document photos, notes, parts, and next-step recommendations',
+      'Customers do not understand why maintenance plans matter until equipment fails',
+      'Seasonal campaigns are not tied to install age, service history, or warranty status',
+      'Unsold estimates never get intelligent follow-up',
+    ],
+  },
+  {
+    id: 14,
+    title: 'Legal Intake & Case Qualification Agent',
+    icon: Scale,
+    description: 'Screen new matters, collect facts, conflict-check inputs, and route qualified leads fast.',
+    benefit: 'Cleaner case intake',
+    gradient: 'from-indigo-500/10 to-blue-500/10',
+    iconBg: 'bg-gradient-to-br from-indigo-500 to-blue-600',
+    painPoints: [
+      'High-value legal leads abandon when intake is slow or confusing',
+      'Staff spend hours gathering facts that could be collected before consultation',
+      'Wrong-fit matters consume attorney time before they are screened out',
+      'Consultation prep lacks timelines, documents, parties, damages, and urgency notes',
+      'Sensitive conversations need clear escalation instead of risky unsupervised advice',
+    ],
+  },
+  {
+    id: 15,
+    title: 'Legal Research & Document Review Agent',
+    icon: FileSearch,
+    description: 'Summarize discovery, compare documents, extract obligations, and prepare attorney review packets.',
+    benefit: 'Hours reclaimed',
+    gradient: 'from-slate-500/10 to-indigo-500/10',
+    iconBg: 'bg-gradient-to-br from-slate-500 to-indigo-600',
+    painPoints: [
+      'Contracts, pleadings, transcripts, and discovery files take too long to review manually',
+      'Teams need issue spotting, chronology building, and clause comparison without losing context',
+      'Research requests require source-backed summaries and attorney approval workflows',
+      'Deadlines, missing documents, and follow-up tasks get buried across matters',
+      'Firms need productivity gains while preserving professional judgment and compliance',
+    ],
+  },
+  {
+    id: 16,
+    title: 'Med Spa Revenue Front Desk Agent',
+    icon: HeartPulse,
+    description: 'Capture leads, recommend safe service pathways, book deposits, and drive protocol-based rebooking.',
+    benefit: 'More booked consults',
+    gradient: 'from-pink-500/10 to-rose-500/10',
+    iconBg: 'bg-gradient-to-br from-pink-500 to-rose-600',
+    painPoints: [
+      'High-intent leads ask about Botox, filler, lasers, facials, and weight-loss services after hours',
+      'Front desks lose revenue when questions, deposits, reminders, and forms are handled manually',
+      'Clients need the right consultation path without the AI giving medical advice',
+      'Zenoti, Boulevard, Aesthetic Record, or CRM workflows need clean booking and notes',
+      'No-shows, cancellations, and missed rebooking windows quietly drain revenue',
+    ],
+  },
 ];
 
 const containerVariants = {
@@ -274,16 +393,17 @@ export function AgentsSection() {
                 {/* Card */}
                 <motion.div
                   layout
-                  className={`relative h-full rounded-2xl bg-gradient-to-br ${agent.gradient} backdrop-blur-sm border border-slate-800/50 hover:border-slate-700/50 transition-all duration-300 overflow-hidden`}
+                  className={`relative h-full overflow-hidden rounded-2xl bg-gradient-to-br ${agent.gradient} border border-cyan-300/14 bg-white/[0.045] shadow-[0_22px_70px_rgba(8,47,73,0.24),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-2xl transition-all duration-300 hover:border-cyan-300/30 hover:bg-white/[0.065]`}
                 >
                   {/* Hover glow effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-300/10 via-white/[0.035] to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-100/50 to-transparent" />
 
                   {/* Main Content */}
                   <div className="relative z-10 p-6 sm:p-8">
                     {/* Icon */}
                     <div
-                      className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl ${agent.iconBg} shadow-lg mb-5`}
+                      className={`inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl ${agent.iconBg} shadow-[0_12px_34px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.28)] mb-5 border border-white/15`}
                     >
                       <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
@@ -330,7 +450,7 @@ export function AgentsSection() {
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-2 border-t border-slate-700/50">
+                        <div className="px-6 sm:px-8 pb-6 sm:pb-8 pt-2 border-t border-cyan-300/12 bg-white/[0.025]">
                           <p className="text-xs uppercase tracking-wider text-slate-500 mb-3 font-medium">
                             Pain Points We Solve
                           </p>
@@ -353,7 +473,7 @@ export function AgentsSection() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 mt-5 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all group/link shadow-lg shadow-cyan-500/20"
+                            className="inline-flex items-center gap-2 mt-5 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 transition-all group/link shadow-[0_12px_34px_rgba(6,182,212,0.22),inset_0_1px_0_rgba(255,255,255,0.18)] border border-cyan-100/20 backdrop-blur-xl"
                           >
                             Get {agent.title} Agent
                             <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
@@ -377,9 +497,10 @@ export function AgentsSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           {/* Creative business tagline */}
-          <div className="text-center mb-8">
+          <div className="mx-auto mb-8 max-w-2xl rounded-3xl border border-cyan-300/12 bg-white/[0.04] px-6 py-6 text-center shadow-[0_24px_70px_rgba(8,47,73,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-2xl">
+            <div className="mx-auto mb-5 h-px max-w-sm bg-gradient-to-r from-transparent via-cyan-200/50 to-transparent" />
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-              Fortune Favors the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Automated</span>
+              Roll the dice and take a chance with AI
             </h3>
             <p className="text-slate-400 max-w-xl mx-auto">
               In business, luck is where preparation meets opportunity. Roll the dice, but let AI stack the odds in your favor.
@@ -387,10 +508,12 @@ export function AgentsSection() {
           </div>
           
           {/* Dice Roller */}
-          <DiceRoller className="max-w-2xl mx-auto" />
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl border border-cyan-300/12 bg-white/[0.035] p-3 shadow-[0_28px_90px_rgba(8,47,73,0.25),inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-2xl">
+            <DiceRoller className="mx-auto max-w-2xl" />
+          </div>
           
           {/* Bottom CTA */}
-          <div className="text-center mt-8">
+          <div className="mx-auto mt-8 max-w-lg rounded-2xl border border-cyan-300/12 bg-white/[0.04] px-6 py-6 text-center shadow-[0_18px_60px_rgba(8,47,73,0.18),inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-xl">
             <p className="text-sm text-slate-500 mb-4">
               Stop gambling with your growth. Start automating your success.
             </p>

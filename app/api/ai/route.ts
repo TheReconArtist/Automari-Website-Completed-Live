@@ -8,6 +8,17 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // Import system prompt for consistent persona
 import { SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
 import { conversationMemory } from '@/lib/ai/conversationMemory';
+import { getRulesFallbackResponse } from '@/lib/ai/rulesFallback';
+
+function createTextStream(text: string): ReadableStream {
+  const encoder = new TextEncoder();
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(encoder.encode(text));
+      controller.close();
+    },
+  });
+}
 
 // Initialize AI SDKs based on environment variables
 const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
@@ -42,7 +53,7 @@ async function retryWithBackoff<T>(
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const { messages, hasInitialGreeting = false } = await req.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json(
@@ -68,7 +79,7 @@ export async function POST(req: NextRequest) {
 
     // Count user messages to determine if this is the first message
     const userMessageCount = formattedMessages.filter((m: any) => m.role === 'user').length;
-    const isFirstMessage = userMessageCount === 1;
+    const isFirstMessage = !hasInitialGreeting && userMessageCount === 1;
     
     // Get conversation context from memory (if available)
     // Extract session ID from request headers or use a default
@@ -186,8 +197,9 @@ ${relevantContext}` : ''}`;
       }));
       stream = OpenAIStream(openrouterStream as any);
     } else {
-      // If no server-side LLM keys, signal client to use WebLLM or rules fallback
-      return NextResponse.json({ mode: 'local' });
+      const fallback = await getRulesFallbackResponse(lastUserMessage, isFirstMessage);
+      stream = createTextStream(fallback.text);
+      provider = 'rules';
     }
 
       return new StreamingTextResponse(stream, { 

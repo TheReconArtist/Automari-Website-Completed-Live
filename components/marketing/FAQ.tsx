@@ -64,15 +64,16 @@ export function FAQ() {
             return (
               <motion.div
                 key={index}
-                className="border border-slate-800 rounded-xl overflow-hidden bg-slate-900/50"
+                className="relative overflow-hidden rounded-xl border border-cyan-300/12 bg-white/[0.045] shadow-[0_18px_58px_rgba(8,47,73,0.18),inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-2xl"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
+                <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-cyan-100/40 to-transparent" />
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full flex items-center justify-between p-5 text-left hover:bg-slate-800/30 transition-colors"
+                  className="relative z-10 w-full flex items-center justify-between p-5 text-left hover:bg-white/[0.045] transition-colors"
                 >
                   <span className="font-medium text-white pr-4">{faq.question}</span>
                   <ChevronDown
@@ -89,7 +90,7 @@ export function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="px-5 pb-5 text-slate-400 text-sm leading-relaxed">
+                      <div className="relative z-10 border-t border-cyan-300/10 px-5 pb-5 pt-4 text-slate-300/82 text-sm leading-relaxed bg-white/[0.018]">
                         {faq.answer}
                       </div>
                     </motion.div>

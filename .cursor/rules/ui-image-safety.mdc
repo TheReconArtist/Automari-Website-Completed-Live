@@ -1,0 +1,55 @@
+---
+description: Prevent UI-breaking image changes on the Automari website
+alwaysApply: true
+---
+
+# UI Image Safety — Automari Website
+
+## Hard stops (never do these)
+
+- Do NOT change `Navigation.tsx`, `app/page.tsx`, `app/layout.tsx`, or `HeroSection.tsx` unless the user explicitly asks to edit that exact file in the current message.
+- Do NOT replace a compact logo lockup (icon + text) with a full-width or full-bleed brand image.
+- Do NOT use `next/image` with `fill` unless the parent has **both** `position: relative` **and** explicit pixel bounds (`w-*` + `h-*`, never unbounded).
+- Do NOT add new images to the homepage/nav without explicit `width`, `height`, and `max-w-*` / `max-h-*` classes.
+- Do NOT run `rm -rf .next`, kill dev servers, or restart production unless the user asks or a build is required after a verified fix.
+
+## Scope for chatbot / logo requests
+
+When the user asks for chatbot or logo changes:
+
+1. **Only edit** files under `components/Chatbot/`, `components/chat/`, and `lib/ai/`.
+2. Nav logo changes require explicit user approval in the same message.
+3. Prefer `/automari-icon-transparent.png` for chatbot slots (FAB, avatars, chat header). Do not use large wordmark images in small UI slots.
+
+## Required image pattern
+
+```tsx
+// ✅ GOOD — explicit dimensions, bounded
+<Image
+  src="/automari-icon-transparent.png"
+  alt="Automari.Ai"
+  width={32}
+  height={32}
+  className="h-8 w-8 max-h-8 max-w-8 object-contain"
+/>
+
+// ❌ BAD — fill in a loose or unbounded container
+<div className="flex items-center">
+  <Image src="/automari-icon-transparent.png" fill className="object-contain" />
+</div>
+```
+
+## Size limits
+
+| Location | Max size |
+|----------|----------|
+| Nav wordmark | `max-h-7`, `max-w-[120px]` |
+| Chat header logo | `max-h-8`, `max-w-8` |
+| Floating chat button | `w-14 h-14` button, logo `max-h-9 max-w-9` inside |
+| Hero / marketing | Do not touch without explicit request |
+
+## Before finishing any UI change
+
+1. Confirm only chatbot-scoped files changed (or user-approved files).
+2. Run `npm run build` — must pass.
+3. Verify homepage returns 200 and nav is still compact (icon ~44px + text, not a large banner).

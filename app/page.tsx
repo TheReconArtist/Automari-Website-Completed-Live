@@ -20,7 +20,6 @@ import Image from "next/image"
 import MariMariChatbot from "@/components/Chatbot/MariMariChatbot"
 import { AIPartnersBanner } from "@/components/ui/ai-partners-banner"
 import { ShiningText } from "@/components/ui/shining-text"
-import { MechanicalWaves } from "@/components/ui/mechanical-waves"
 import { Navigation } from "@/components/marketing/Navigation"
 import { HeroSection } from "@/components/marketing/HeroSection"
 import { AgentsSection } from "@/components/marketing/AgentsSection"
@@ -232,83 +231,6 @@ export default function AutomariWebsite() {
       {/* AI Agents Section */}
       <AgentsSection />
 
-      {/* Mechanical Waves Interactive Section */}
-      <section className="relative w-full overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <style jsx>{`
-              @keyframes shimmer {
-                0% { background-position: -200% center; }
-                100% { background-position: 200% center; }
-              }
-              .animated-text {
-                background: linear-gradient(
-                  90deg,
-                  #ffffff 0%,
-                  #e0e7ff 25%,
-                  #ffffff 50%,
-                  #c7d2fe 75%,
-                  #ffffff 100%
-                );
-                background-size: 200% auto;
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                animation: shimmer 4s linear infinite;
-              }
-              .valleys-text {
-                background: linear-gradient(
-                  90deg,
-                  #60a5fa 0%,
-                  #38bdf8 25%,
-                  #22d3ee 50%,
-                  #38bdf8 75%,
-                  #60a5fa 100%
-                );
-                background-size: 200% auto;
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                animation: shimmer 3s linear infinite;
-              }
-            `}</style>
-            <h2 className="text-3xl sm:text-5xl font-bold mb-6 leading-tight text-white">
-              You decide where you want your business to grow
-              <br />
-              It&apos;s mountains. <span className="valleys-text">Not the valleys.</span>
-            </h2>
-          </motion.div>
-
-          {/* Interactive Waves Container */}
-          <motion.div
-            className="relative w-full flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <div className="relative w-full max-w-6xl h-[600px] md:h-[700px] lg:h-[800px] rounded-2xl overflow-hidden bg-slate-900/50 border border-blue-500/20">
-              <MechanicalWaves
-                width={1200}
-                height={800}
-                backgroundColor="transparent"
-                foregroundColor="#3b82f6"
-                speed={1}
-                amplitude={5}
-                peakHeight={60}
-              />
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* AI Partners Slideshow */}
       <AIPartnersBanner />
 
@@ -341,9 +263,9 @@ export default function AutomariWebsite() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-md border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 p-6">
+                <Card className="h-full bg-white/[0.045] backdrop-blur-2xl border border-cyan-300/12 hover:border-cyan-300/28 transition-all duration-300 p-6 shadow-[0_22px_70px_rgba(8,47,73,0.20),inset_0_1px_0_rgba(255,255,255,0.10)] overflow-hidden">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                    <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-4 border border-white/15 shadow-[0_12px_34px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]">
                       {testimonial.avatar}
                     </div>
                     <div>
@@ -385,7 +307,7 @@ export default function AutomariWebsite() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-600/50 p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white/[0.065] rounded-2xl border border-cyan-300/18 p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[0_30px_100px_rgba(8,47,73,0.34),inset_0_1px_0_rgba(255,255,255,0.14)] backdrop-blur-2xl"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -430,7 +352,7 @@ export default function AutomariWebsite() {
                         placeholder={currentQuestion.placeholder}
                         value={surveyData[currentQuestion.id] || ""}
                         onChange={(e) => handleSurveyChange(currentQuestion.id, e.target.value)}
-                        className="bg-slate-700/50 border-slate-600 text-white placeholder-slate-400"
+                        className="bg-white/[0.055] border-cyan-300/16 text-white placeholder-slate-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
                       />
                     )}
 
@@ -438,7 +360,7 @@ export default function AutomariWebsite() {
                       <select
                         value={surveyData[currentQuestion.id] || ""}
                         onChange={(e) => handleSurveyChange(currentQuestion.id, e.target.value)}
-                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
+                        className="w-full p-3 bg-slate-950/70 border border-cyan-300/16 rounded-lg text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
                       >
                         <option value="">Select an option...</option>
                         {currentQuestion.options?.map((option) => (
@@ -614,7 +536,7 @@ export default function AutomariWebsite() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
               <motion.a
                 href="tel:561-201-4365"
-                className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-red-600/20 to-red-800/20 backdrop-blur-sm border border-red-500/30 rounded-2xl hover:border-red-400/50 transition-all duration-300"
+                className="flex items-center justify-center space-x-3 p-6 bg-white/[0.055] backdrop-blur-2xl border border-cyan-300/14 rounded-2xl hover:border-cyan-300/30 transition-all duration-300 shadow-[0_18px_58px_rgba(8,47,73,0.18),inset_0_1px_0_rgba(255,255,255,0.12)]"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -627,7 +549,7 @@ export default function AutomariWebsite() {
 
               <motion.a
                 href="mailto:contactautomari@gmail.com"
-                className="flex items-center justify-center space-x-3 p-6 bg-gradient-to-r from-blue-600/20 to-blue-800/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl hover:border-blue-400/50 transition-all duration-300"
+                className="flex items-center justify-center space-x-3 p-6 bg-white/[0.055] backdrop-blur-2xl border border-cyan-300/14 rounded-2xl hover:border-cyan-300/30 transition-all duration-300 shadow-[0_18px_58px_rgba(8,47,73,0.18),inset_0_1px_0_rgba(255,255,255,0.12)]"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -654,19 +576,25 @@ export default function AutomariWebsite() {
       </section> 
 
       {/* Enhanced Footer */}
-      <footer className="relative border-t border-slate-700/50 py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 to-slate-900">
+      <footer className="relative border-t border-cyan-300/10 py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 to-slate-900 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-950/10 via-transparent to-blue-950/10" />
         <div className="relative max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
             {/* Company Info */}
-            <div className="text-center md:text-left">
+            <div className="text-center md:text-left rounded-3xl border border-cyan-300/10 bg-white/[0.035] p-6 shadow-[0_18px_58px_rgba(8,47,73,0.16),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
               <motion.div
                 className="flex items-center justify-center md:justify-start space-x-3 mb-6"
                 whileHover={{ scale: 1.05 }} 
               >
-                <div className="relative w-12 h-12">
-                  <Image src="/automari-logo.png" alt="Automari Logo" fill className="object-cover rounded-full" />
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-full overflow-hidden">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500/50 to-blue-500/50 blur-sm opacity-75 animate-pulse" />
+                  <Image
+                    src="/automari-icon-transparent.png"
+                    alt="Automari Logo"
+                    width={40}
+                    height={40}
+                    className="relative z-10 h-10 w-10 max-h-10 max-w-10 object-contain"
+                  />
                 </div>
                 <ShiningText size="3xl">
                   Automari
@@ -684,7 +612,7 @@ export default function AutomariWebsite() {
             </div>
 
             {/* Contact Info */}
-            <div className="text-center">
+            <div className="text-center rounded-3xl border border-cyan-300/10 bg-white/[0.035] p-6 shadow-[0_18px_58px_rgba(8,47,73,0.16),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
               <h4 className="text-xl font-semibold text-white mb-6">Get in Touch</h4>
               <div className="space-y-4">
                 <motion.a
