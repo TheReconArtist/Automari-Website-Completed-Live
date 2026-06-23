@@ -348,7 +348,7 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative hidden min-h-[520px] lg:block pointer-events-auto"
+            className="relative hidden min-h-[560px] lg:block pointer-events-auto"
           >
             <div className="absolute left-10 top-2 max-w-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-cyan-200/70">
@@ -366,28 +366,28 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
                   value: '$40,000+',
                   label: 'Annual labor savings',
                   color: 'text-cyan-300',
-                  className: 'left-4 top-28 z-40 -rotate-3 -skew-y-[4deg]',
+                  className: 'left-0 top-28 z-40 -rotate-3 -skew-y-[4deg]',
                 },
                 {
                   icon: Clock,
                   value: '20-50',
                   label: 'Hours saved weekly',
                   color: 'text-emerald-300',
-                  className: 'right-0 top-44 z-30 rotate-2 -skew-y-[4deg]',
+                  className: 'right-8 top-40 z-30 rotate-2 -skew-y-[4deg]',
                 },
                 {
                   icon: Shield,
                   value: '99%',
                   label: 'Client satisfaction',
                   color: 'text-amber-300',
-                  className: 'left-12 top-72 z-20 rotate-2 -skew-y-[4deg]',
+                  className: 'left-10 top-64 z-20 rotate-2 -skew-y-[4deg]',
                 },
                 {
                   icon: Sparkles,
                   value: '24/7',
                   label: 'Always available',
                   color: 'text-purple-300',
-                  className: 'right-8 top-[23rem] z-10 -rotate-2 -skew-y-[4deg]',
+                  className: 'right-14 top-[21rem] z-10 -rotate-2 -skew-y-[4deg]',
                 },
               ].map((item, i) => (
                 <motion.div
@@ -397,9 +397,8 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
                   transition={{ delay: 0.65 + i * 0.12, duration: 0.7 }}
                   whileHover={{ y: -12, scale: 1.03, rotate: 0, skewY: 0 }}
                   className={cn(
-                    'absolute flex h-32 w-[18.5rem] select-none flex-col justify-between rounded-2xl border border-cyan-200/18 bg-slate-950/42 px-5 py-4 shadow-[0_18px_55px_rgba(8,47,73,0.28),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md transition-all duration-500 hover:border-cyan-200/35 hover:bg-slate-950/58 hover:shadow-[0_22px_70px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]',
+                    'absolute flex h-[7.5rem] w-[17rem] select-none flex-col justify-between rounded-2xl border border-cyan-200/18 bg-slate-950/42 px-5 py-4 shadow-[0_18px_55px_rgba(8,47,73,0.28),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md transition-all duration-500 hover:border-cyan-200/35 hover:bg-slate-950/58 hover:shadow-[0_22px_70px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]',
                     'before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/[0.09] before:via-transparent before:to-cyan-300/[0.06] before:content-[""]',
-                    'after:absolute after:-right-8 after:top-0 after:h-full after:w-24 after:bg-gradient-to-l after:from-slate-950/50 after:to-transparent after:content-[""]',
                     item.className,
                   )}
                 >
@@ -407,7 +406,7 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
                     <span className="inline-flex rounded-full bg-cyan-400/10 p-2 ring-1 ring-cyan-200/20">
                       <item.icon className={`h-5 w-5 ${item.color}`} />
                     </span>
-                    <span className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/80">
+                    <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-slate-300/85">
                       {item.label}
                     </span>
                   </div>
