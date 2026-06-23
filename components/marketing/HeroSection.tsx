@@ -343,49 +343,79 @@ export function HeroSection({ onStartAssessment }: HeroSectionProps) {
             </motion.div>
           </div>
 
-          {/* Right Column - Value Cards (Desktop only) */}
+          {/* Right Column - Floating Value Cards (Desktop only) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
-            className="relative hidden lg:block pointer-events-auto"
+            className="relative hidden min-h-[520px] lg:block pointer-events-auto"
           >
-            {/* Floating Value Card */}
-            <div className="relative overflow-hidden p-8 rounded-3xl bg-white/[0.055] backdrop-blur-2xl border border-cyan-300/18 shadow-[0_28px_90px_rgba(8,47,73,0.42),inset_0_1px_0_rgba(255,255,255,0.16),inset_0_-1px_0_rgba(14,165,233,0.08)]">
-              <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-cyan-300/10 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-24 left-8 h-52 w-52 rounded-full bg-blue-500/10 blur-3xl" />
-              <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/55 to-transparent" />
-              <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-cyan-100 mb-2 drop-shadow-[0_0_18px_rgba(34,211,238,0.24)]">Average Client Savings</h3>
-                <p className="text-slate-300/80">What businesses like yours typically save</p>
-              </div>
+            <div className="absolute left-10 top-2 max-w-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-cyan-200/70">
+                Average Client Savings
+              </p>
+              <p className="mt-2 text-sm text-slate-300/75">
+                Floating impact cards that keep the particle field visible.
+              </p>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: TrendingUp, value: '$40,000+', label: 'Annual labor savings', color: 'text-cyan-400' },
-                  { icon: Clock, value: '20-50', label: 'Hours saved weekly', color: 'text-green-400' },
-                  { icon: Shield, value: '99%', label: 'Client satisfaction', color: 'text-amber-400' },
-                  { icon: Sparkles, value: '24/7', label: 'Always available', color: 'text-purple-400' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 + i * 0.1 }}
-                    className="p-4 rounded-xl bg-white/[0.055] border border-cyan-300/14 hover:border-cyan-300/35 transition-colors shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_0_22px_rgba(8,145,178,0.08)] backdrop-blur-xl"
-                  >
-                    <item.icon className={`h-7 w-7 ${item.color} mb-3`} />
-                    <div className="text-2xl font-extrabold text-cyan-100 mb-1 drop-shadow-[0_0_16px_rgba(34,211,238,0.36)]">{item.value}</div>
-                    <div className="text-sm text-slate-300/80">{item.label}</div>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
-                <p className="text-slate-400 text-sm">
-                  Custom solutions tailored to your business needs
-                </p>
-              </div>
+            <div className="absolute inset-0 [perspective:1200px]">
+              {[
+                {
+                  icon: TrendingUp,
+                  value: '$40,000+',
+                  label: 'Annual labor savings',
+                  color: 'text-cyan-300',
+                  className: 'left-4 top-28 z-40 -rotate-3 -skew-y-[4deg]',
+                },
+                {
+                  icon: Clock,
+                  value: '20-50',
+                  label: 'Hours saved weekly',
+                  color: 'text-emerald-300',
+                  className: 'right-0 top-44 z-30 rotate-2 -skew-y-[4deg]',
+                },
+                {
+                  icon: Shield,
+                  value: '99%',
+                  label: 'Client satisfaction',
+                  color: 'text-amber-300',
+                  className: 'left-12 top-72 z-20 rotate-2 -skew-y-[4deg]',
+                },
+                {
+                  icon: Sparkles,
+                  value: '24/7',
+                  label: 'Always available',
+                  color: 'text-purple-300',
+                  className: 'right-8 top-[23rem] z-10 -rotate-2 -skew-y-[4deg]',
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 28, rotateX: -10 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ delay: 0.65 + i * 0.12, duration: 0.7 }}
+                  whileHover={{ y: -12, scale: 1.03, rotate: 0, skewY: 0 }}
+                  className={cn(
+                    'absolute flex h-32 w-[18.5rem] select-none flex-col justify-between rounded-2xl border border-cyan-200/18 bg-slate-950/42 px-5 py-4 shadow-[0_18px_55px_rgba(8,47,73,0.28),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md transition-all duration-500 hover:border-cyan-200/35 hover:bg-slate-950/58 hover:shadow-[0_22px_70px_rgba(34,211,238,0.18),inset_0_1px_0_rgba(255,255,255,0.22)]',
+                    'before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/[0.09] before:via-transparent before:to-cyan-300/[0.06] before:content-[""]',
+                    'after:absolute after:-right-8 after:top-0 after:h-full after:w-24 after:bg-gradient-to-l after:from-slate-950/50 after:to-transparent after:content-[""]',
+                    item.className,
+                  )}
+                >
+                  <div className="relative flex items-center gap-3">
+                    <span className="inline-flex rounded-full bg-cyan-400/10 p-2 ring-1 ring-cyan-200/20">
+                      <item.icon className={`h-5 w-5 ${item.color}`} />
+                    </span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300/80">
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="relative text-3xl font-extrabold tracking-tight text-cyan-100 drop-shadow-[0_0_18px_rgba(34,211,238,0.42)]">
+                    {item.value}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
